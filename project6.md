@@ -200,6 +200,90 @@
 ![ScreenShot_07_07_2022_14_36_04](https://user-images.githubusercontent.com/19933457/179592434-a5c50d43-258a-4af4-9bcd-ed115270936c.png)
 ![ScreenShot_07_07_2022_14_36_54](https://user-images.githubusercontent.com/19933457/179592638-af2501cc-7c4c-4fff-863b-3a74c231fcb1.png)
 
+`setsebool -P httpd_execmem 1`
+
+![ScreenShot_07_07_2022_14_38_34](https://user-images.githubusercontent.com/19933457/179596141-21366adb-0b10-4945-a775-eacadddda8fe.png)
+
+### 5. Restart Apache
+`sudo systemctl restart httpd`
+![ScreenShot_07_07_2022_14_41_46](https://user-images.githubusercontent.com/19933457/179598986-cc57bb06-246a-4678-bf5a-32b46f5829ee.png)
+
+`sudo systemctl status httpd`
+![ScreenShot_07_07_2022_14_42_16](https://user-images.githubusercontent.com/19933457/179599022-817f798b-d24f-452c-a0d4-542aac941b64.png)
+
+### 6. I will Download wordpress and copy wordpress to var/www/html
+`mkdir wordpress cd   wordpress`
+![ScreenShot_07_07_2022_14_48_42](https://user-images.githubusercontent.com/19933457/179599737-1a042750-806c-47b0-b9f9-c3052353a0bf.png)
+
+`sudo wget http://wordpress.org/latest.tar.gz`
+![ScreenShot_07_07_2022_14_48_42](https://user-images.githubusercontent.com/19933457/179599737-1a042750-806c-47b0-b9f9-c3052353a0bf.png)
+
+`sudo tar xzvf latest.tar.gz`
+![ScreenShot_07_07_2022_14_50_57](https://user-images.githubusercontent.com/19933457/179600008-ec489ad1-11ca-488a-9ef9-524fafd9a097.png)
+
+`sudo rm -rf latest.tar.gz`
+
+`cp wordpress/wp-config-sample.php wordpress/wp-config.php`
+
+![ScreenShot_07_07_2022_14_57_40](https://user-images.githubusercontent.com/19933457/179600431-30306bf8-303a-4bd8-a578-160dae115f76.png)
+
+`cp -R wordpress /var/www/html/`
+
+![ScreenShot_07_07_2022_15_02_26](https://user-images.githubusercontent.com/19933457/179600443-9ebd9567-0a34-4ab3-ac7c-8fbe4c9207dc.png)
+
+## Step 4 — Install MySQL on on DB Server EC2
+`sudo yum update`
+`sudo yum install mysql-server`
+
+### Verify that the service is up and running by using sudo systemctl status mysqld, if it is not running, restart the service and enable it so it will be running even after reboot:
+`sudo systemctl restart mysqld`
+`sudo systemctl enable mysqld`
+![ScreenShot_07_07_2022_15_23_44](https://user-images.githubusercontent.com/19933457/179601640-b0212b43-5ca3-409b-af58-5db13dc2c87e.png)
+
+
+
+![ScreenShot_07_07_2022_15_20_18](https://user-images.githubusercontent.com/19933457/179601189-5daa3ebb-cafb-47bb-a902-4e87f7c83d26.png)
+
+## Step 5 — Configure DB to work with WordPress
+`sudo mysql`
+![ScreenShot_07_07_2022_15_25_07](https://user-images.githubusercontent.com/19933457/179601662-e68dea82-3fa1-41ab-a005-0c1161a4f2eb.png)
+
+`CREATE DATABASE wordpress;`
+![ScreenShot_07_07_2022_15_25_53](https://user-images.githubusercontent.com/19933457/179601750-b5dd05ad-94c2-4d9a-bea1-7939cdcff67c.png)
+
+`Show DATABASE;`
+![ScreenShot_07_07_2022_15_26_25](https://user-images.githubusercontent.com/19933457/179601784-f8311f5d-51c5-40e9-a5e5-0c7ef0d9db41.png)
+
+`CREATE USER 'wordpress'@'%' IDENTIFIED WITH mysql_native_password BY 'wordpress';`
+![ScreenShot_07_07_2022_15_35_54](https://user-images.githubusercontent.com/19933457/179602747-5ede7fd1-c419-4004-b8f4-f23d448497fb.png)
+
+`GRANT ALL PRIVILEGES ON *.* TO 'wordpress'@'%' WITH GRANT OPTION;`
+![ScreenShot_07_07_2022_15_36_37](https://user-images.githubusercontent.com/19933457/179602829-150edbe6-2e2a-4b25-839a-12e8d260b1c2.png)
+
+`FLUSH PRIVILEGES;`
+![ScreenShot_07_07_2022_15_37_05](https://user-images.githubusercontent.com/19933457/179602898-7c66afb3-d031-49fc-865a-c31a4cd7e034.png)
+
+`SHOW DATABASES;`
+![ScreenShot_07_07_2022_15_43_11](https://user-images.githubusercontent.com/19933457/179603153-3843562c-453f-4ac1-b0c2-7d9a1cd69b61.png)
+
+## Step 6 — I Configure WordPress to connect to remote database.
+### I open MySQL port 3306 on DB Server EC2. For extra security, I shall allow access to the DB server ONLY from my Web Server’s IP address, so in the Inbound Rule configuration specify source as /32
+
+![ScreenShot_07_07_2022_15_50_01](https://user-images.githubusercontent.com/19933457/179603569-96a9a0d7-ddeb-436d-b383-4879866bd366.png)
+![ScreenShot_07_07_2022_16_00_43](https://user-images.githubusercontent.com/19933457/179603577-2a14b476-50d0-49af-8ccf-1c3745d81d2d.png)
+
+### Final Result with my wordpress website page
+![ScreenShot_07_07_2022_16_09_40](https://user-images.githubusercontent.com/19933457/179603704-2cb2d228-075a-4bb4-ad0b-d7116617afcc.png)
+![ScreenShot_07_07_2022_16_09_52](https://user-images.githubusercontent.com/19933457/179603720-e4b24af1-c0e9-46d1-a998-d248b262be62.png)
+![ScreenShot_07_07_2022_16_10_50](https://user-images.githubusercontent.com/19933457/179603726-2a5b6115-3d32-4681-8d73-3b4ec0f2aefd.png)
+![ScreenShot_07_07_2022_16_11_52](https://user-images.githubusercontent.com/19933457/179603734-1bafef6e-59dc-4dd9-af07-c6a529b4a172.png)
+![ScreenShot_07_07_2022_16_12_51](https://user-images.githubusercontent.com/19933457/179603785-d8980d16-bef9-4db1-bf91-9e10c2deb126.png)
+![ScreenShot_07_07_2022_16_13_13](https://user-images.githubusercontent.com/19933457/179603793-032fedea-8626-4c90-970a-513b4a373853.png)
+![ScreenShot_07_07_2022_16_13_40](https://user-images.githubusercontent.com/19933457/179603804-e7f5482b-4f94-4fab-94b9-346d8916552f.png)
+
+
+
+
 
 
 
