@@ -132,6 +132,80 @@
 `sudo blkid`
 ![ScreenShot_07_07_2022_12_43_25](https://user-images.githubusercontent.com/19933457/179579102-530fedf6-6e55-4823-93a9-51806a4ebc01.png)
 
+### 22. Update /etc/fstab in this format using your own UUID and rememeber to remove the leading and ending quotes.
+`sudo vi /etc/fstab`
+![ScreenShot_07_07_2022_12_48_34](https://user-images.githubusercontent.com/19933457/179579655-0edfaf38-cb48-48ec-8ffb-aee41049f32c.png)
+
+### 23. Test the configuration and reload the daemon
+`sudo mount -a`
+![ScreenShot_07_07_2022_12_55_38](https://user-images.githubusercontent.com/19933457/179579899-3c82bcfa-217f-41eb-84ea-b02e66ef23f1.png)
+
+`sudo systemctl daemon-reload`
+![ScreenShot_07_07_2022_12_56_12](https://user-images.githubusercontent.com/19933457/179579919-c975c604-0206-49d0-89e4-68075f68960e.png)
+
+### 24 I Verify your setup by running df -h.
+
+## Step 2 — Prepare the Database Server
+
+### 25 I Launch a second RedHat EC2 instance that will have a role – ‘DB Server’
+### I Repeat the same steps as for the Web Server, but instead of apps-lv I create db-lv and mount it to /db directory instead of /var/www/html/.
+
+![ScreenShot_07_07_2022_13_12_07](https://user-images.githubusercontent.com/19933457/179579948-25573482-99db-4df4-82c8-840e0f24dcb6.png)
+
+### 24 I Verify your setup by running df -h.
+![ScreenShot_07_07_2022_13_40_58](https://user-images.githubusercontent.com/19933457/179581295-44010d41-2a18-423e-8d92-c8f292d9c9ee.png)
+
+## Step 3 — I Install WordPress on my Web Server EC2
+
+### 1. I Update the repository
+`sudo yum -y update`
+![ScreenShot_07_07_2022_14_13_37](https://user-images.githubusercontent.com/19933457/179582450-d57b785a-57cd-4737-b452-12d4b483bad4.png)
+
+### 2. Install wget, Apache and it’s dependencies
+`sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json`
+![ScreenShot_07_07_2022_14_13_47](https://user-images.githubusercontent.com/19933457/179582491-b32a9fa3-2921-4770-9996-38036db56150.png)
+![ScreenShot_07_07_2022_14_20_43](https://user-images.githubusercontent.com/19933457/179582536-33db1e41-58dd-466b-8daa-13fab04f38db.png)
+
+### 3.  Start Apache
+`sudo systemctl enable httpd`
+`sudo systemctl start httpd`
+
+### 4. To install PHP and it’s depemdencies, I will run the following command
+`sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm`
+
+
+![ScreenShot_07_07_2022_14_29_03](https://user-images.githubusercontent.com/19933457/179586712-d2f87208-005b-43ec-9bd6-3e36bc5ac6ce.png)
+
+`sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm`
+
+![ScreenShot_07_07_2022_14_29_28](https://user-images.githubusercontent.com/19933457/179587887-3dbb9395-f029-4f2f-a5a1-ed406442c55b.png)
+
+`sudo yum module list php`
+
+![ScreenShot_07_07_2022_14_30_17](https://user-images.githubusercontent.com/19933457/179588809-25f398b0-76cb-4f25-bdc6-36a23a03a5a6.png)
+
+`sudo yum module reset php`
+![ScreenShot_07_07_2022_14_32_00](https://user-images.githubusercontent.com/19933457/179589947-cdcba372-5f26-490b-baf0-1105f5be6e3c.png)
+
+`sudo yum module enable php:remi-7.4`
+![ScreenShot_07_07_2022_14_32_42](https://user-images.githubusercontent.com/19933457/179590284-61b7b0c1-27f4-4ca2-88a3-097a0afe4a6e.png)
+
+`sudo yum install php php-opcache php-gd php-curl php-mysqlnd`
+![ScreenShot_07_07_2022_14_33_55](https://user-images.githubusercontent.com/19933457/179592018-e38dbac5-3136-43f5-ac3d-f62fca57b874.png)
+
+`sudo systemctl start php-fpm`
+![ScreenShot_07_07_2022_14_35_18](https://user-images.githubusercontent.com/19933457/179592225-f01e6c58-34a6-4045-8ecb-9133fc17e83a.png)
+
+`sudo systemctl enable php-fpm`
+![ScreenShot_07_07_2022_14_36_04](https://user-images.githubusercontent.com/19933457/179592434-a5c50d43-258a-4af4-9bcd-ed115270936c.png)
+![ScreenShot_07_07_2022_14_36_54](https://user-images.githubusercontent.com/19933457/179592638-af2501cc-7c4c-4fff-863b-3a74c231fcb1.png)
+
+
+
+
+
+
+
 
 
 
